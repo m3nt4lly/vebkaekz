@@ -91,3 +91,19 @@ function logout() {
 function isAuthenticated() {
     return !!localStorage.getItem('token');
 }
+
+async function getMe() {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+    
+    const response = await fetch(`${API_URL}/auth/me`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (!response.ok) {
+        localStorage.removeItem('token');
+        return null;
+    }
+    
+    return response.json();
+}

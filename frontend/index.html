@@ -25,6 +25,7 @@
                     <a href="/teachers.html" class="text-gray-300 hover:text-white">Преподаватели</a>
                     <a href="/instruments.html" class="text-gray-300 hover:text-white">Инструменты</a>
                     <a href="/schedule.html" class="text-gray-300 hover:text-white">Расписание</a>
+                    <span id="userEmail" class="text-gray-400 hidden"></span>
                     <a href="/login.html" id="authLink" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg">Войти</a>
                 </div>
                 <button id="menuBtn" class="md:hidden flex items-center">
@@ -41,6 +42,7 @@
                 <a href="/teachers.html" class="block text-gray-300 py-2">Преподаватели</a>
                 <a href="/instruments.html" class="block text-gray-300 py-2">Инструменты</a>
                 <a href="/schedule.html" class="block text-gray-300 py-2">Расписание</a>
+                <span id="userEmailMobile" class="block text-gray-400 py-2 hidden"></span>
                 <a href="/login.html" id="authLinkMobile" class="block bg-purple-600 text-center py-2 rounded-lg">Войти</a>
             </div>
         </div>
@@ -90,14 +92,24 @@
             document.getElementById('mobileMenu').classList.toggle('hidden');
         });
 
-        if (isAuthenticated()) {
-            document.getElementById('authLink').textContent = 'Выйти';
-            document.getElementById('authLink').href = '#';
-            document.getElementById('authLink').onclick = () => { logout(); return false; };
-            document.getElementById('authLinkMobile').textContent = 'Выйти';
-            document.getElementById('authLinkMobile').href = '#';
-            document.getElementById('authLinkMobile').onclick = () => { logout(); return false; };
+        async function initAuth() {
+            if (isAuthenticated()) {
+                const user = await getMe();
+                if (user) {
+                    document.getElementById('userEmail').textContent = user.email;
+                    document.getElementById('userEmail').classList.remove('hidden');
+                    document.getElementById('userEmailMobile').textContent = user.email;
+                    document.getElementById('userEmailMobile').classList.remove('hidden');
+                }
+                document.getElementById('authLink').textContent = 'Выйти';
+                document.getElementById('authLink').href = '#';
+                document.getElementById('authLink').onclick = () => { logout(); return false; };
+                document.getElementById('authLinkMobile').textContent = 'Выйти';
+                document.getElementById('authLinkMobile').href = '#';
+                document.getElementById('authLinkMobile').onclick = () => { logout(); return false; };
+            }
         }
+        initAuth();
     </script>
 </body>
 </html>
